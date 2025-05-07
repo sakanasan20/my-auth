@@ -1,3 +1,8 @@
 spring:
   application:
     name: my-auth
+  security:
+    user:
+      name: admin
+      password: password
+      
