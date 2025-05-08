@@ -1,4 +1,4 @@
-package com.niq.auth.config;
+package com.niq.auth.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

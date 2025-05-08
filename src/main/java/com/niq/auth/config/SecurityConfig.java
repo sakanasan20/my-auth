@@ -15,20 +15,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-	/**
-	 * 支援加密密碼
-	 * @return
-	 */
 	@Bean
 	PasswordEncoder passwordEncoder() {
-	    // 支援 bcrypt 且向下相容
-	    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	    return PasswordEncoderFactories.createDelegatingPasswordEncoder(); // 支援 bcrypt 且向下相容
 	}
 	
 	@Bean
 	UserDetailsService userDetailsService() {
 	    UserDetails user = User.withUsername("admin")
-	        .password(passwordEncoder().encode("password")) // {noop} 表示不加密（僅限測試用）
+	        .password(passwordEncoder().encode("password"))
 	        .roles("ADMIN") // 或可改成 ADMIN 等
 	        .build();
 	    return new InMemoryUserDetailsManager(user);
@@ -37,15 +32,15 @@ public class SecurityConfig {
 	@Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-	        .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
-	        .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
+	        .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**")) // h2
+	        .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin())) // h2
             .authorizeHttpRequests(auth -> auth
-        		.requestMatchers("/h2-console/**").permitAll()
-        		.requestMatchers("/oidc/logout").permitAll()
+        		.requestMatchers("/h2-console/**").permitAll() // h2
+        		.requestMatchers("/oidc/logout").permitAll() // OIDC Logout
         		.anyRequest().authenticated()
         	)
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-            .formLogin(Customizer.withDefaults());
+            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())) // Resource Server
+            .formLogin(Customizer.withDefaults()); // Form Login
         return http.build();
     }
 }

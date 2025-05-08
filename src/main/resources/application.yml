@@ -5,6 +5,11 @@ spring:
     user:
       name: admin
       password: password
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+          jwk-set-uri: http://localhost:8081/oauth2/jwks
   datasource:
     url: jdbc:h2:mem:testdb   # 使用內存型 H2 資料庫（可根據需求修改為文件型態，例：jdbc:h2:file:/data/db）
     driver-class-name: org.h2.Driver
