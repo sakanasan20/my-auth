@@ -104,7 +104,7 @@ public class SecurityConfig {
             .build();
 
         JdbcRegisteredClientRepository repo = new JdbcRegisteredClientRepository(jdbcTemplate);
-        if (repo.findByClientId("client2") == null) {
+        if (repo.findByClientId("client-002") == null) {
             repo.save(registeredClient);
         }
         return repo;
