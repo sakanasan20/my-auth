@@ -5,4 +5,22 @@ spring:
     user:
       name: admin
       password: password
-      
+  datasource:
+    url: jdbc:h2:mem:testdb   # 使用內存型 H2 資料庫（可根據需求修改為文件型態，例：jdbc:h2:file:/data/db）
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    hikari:
+      maximum-pool-size: 5   # 可根據需求調整最大連接池大小
+  h2:
+    console:
+      enabled: true          # 啟用 H2 控制台（預設為 false，開啟後可透過 localhost:8080/h2-console 存取）
+      path: /h2-console       # 控制台的路徑
+  jpa:
+    hibernate:
+      ddl-auto: update       # 根據需求配置，選擇 create/update/validate none
+    database-platform: org.hibernate.dialect.H2Dialect # 確保使用 H2 方言
+logging:
+  level:
+    '[org.hibernate.SQL]': debug  # 開啟 Hibernate SQL 輸出（選擇性）
+    '[org.hibernate.type.descriptor.sql.BasicBinder]': trace  # 顯示 Hibernate 綁定變數
