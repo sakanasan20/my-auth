@@ -59,7 +59,7 @@ public class AuthorizationServerConfig {
 
 	            User user = userDetails.getUser();
 	            UserInfoDto userInfo = userConverter.toUserInfoDto(user);
-//
+
 	            if (context.getTokenType().getValue().equals("id_token")) {
 	                context.getClaims().claim("roles", roles);
 	                context.getClaims().claim("user", userInfo.toClaims()); // toClaims() 將 DTO 轉為 Map，保證能被 JSON 正確序列化進 token
@@ -77,11 +77,7 @@ public class AuthorizationServerConfig {
     @Bean
     SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
 		var authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
-        authorizationServerConfigurer.oidc(Customizer.withDefaults());
-
-        // 自訂端點
-        authorizationServerConfigurer
-                .oidc(Customizer.withDefaults()); // 啟用 OpenID Connect 支援（如需要）
+        authorizationServerConfigurer.oidc(Customizer.withDefaults()); // 啟用 OpenID Connect 支援（如需要）
 
         http
             .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
@@ -135,6 +131,7 @@ public class AuthorizationServerConfig {
             generator.initialize(2048);
             KeyPair keyPair = generator.generateKeyPair();
 
+            // TODO 金鑰持久化
             return new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
                 .privateKey(keyPair.getPrivate())
                 .keyID(UUID.randomUUID().toString())
