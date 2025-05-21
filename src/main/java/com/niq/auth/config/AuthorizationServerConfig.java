@@ -1,8 +1,5 @@
 package com.niq.auth.config;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.interfaces.RSAPublicKey;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
@@ -30,10 +27,6 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
 import com.niq.auth.converter.UserConverter;
 import com.niq.auth.dto.UserInfoDto;
 import com.niq.auth.entity.User;
@@ -113,33 +106,6 @@ public class AuthorizationServerConfig {
 		
 		return new InMemoryRegisteredClientRepository(registeredClient); // 若要接資料庫，也可改成 JdbcRegisteredClientRepository
 	}
-
-    /**
-     * JWT 的簽章金鑰來源，會自動用於 access token 的簽章與 OpenID metadata (/jwks)
-     * @return
-     */
-    @Bean
-    JWKSource<SecurityContext> jwkSource() {
-        RSAKey rsaKey = generateRsa();
-        JWKSet jwkSet = new JWKSet(rsaKey);
-        return (jwkSelector, context) -> jwkSelector.select(jwkSet);
-    }
-
-    private RSAKey generateRsa() {
-        try {
-            KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-            generator.initialize(2048);
-            KeyPair keyPair = generator.generateKeyPair();
-
-            // TODO 金鑰持久化
-            return new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
-                .privateKey(keyPair.getPrivate())
-                .keyID(UUID.randomUUID().toString())
-                .build();
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
     
     @Bean
     AuthorizationServerSettings authorizationServerSettings() {
