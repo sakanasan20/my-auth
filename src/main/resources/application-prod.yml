@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+oauth2:
+  redirect-uri: http://my-portal:8080/login/oauth2/code/portal-client
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://my-auth:8080

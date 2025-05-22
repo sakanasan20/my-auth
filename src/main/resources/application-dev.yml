@@ -1,0 +1,19 @@
+server:
+  port: 8081
+
+oauth2:
+  redirect-uri: http://localhost:8080/login/oauth2/code/portal-client
+  
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081 
+  
+logging:
+  level:
+    '[org.hibernate.SQL]': debug  # 開啟 Hibernate SQL 輸出（選擇性）
+    '[org.hibernate.type.descriptor.sql.BasicBinder]': trace  # 顯示 Hibernate 綁定變數
+    '[org.springframework.security]': debug
+    '[org.springframework.web]': debug

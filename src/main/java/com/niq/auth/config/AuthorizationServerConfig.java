@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -34,6 +35,9 @@ import com.niq.auth.security.CustomUserDetails;
 
 @Configuration
 public class AuthorizationServerConfig {
+	
+    @Value("${oauth2.redirect-uri}")
+    private String redirectUri;
 	
 	@Autowired
 	private UserConverter userConverter;
@@ -93,7 +97,7 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .redirectUri("http://localhost:8080/login/oauth2/code/portal-client") 
+                .redirectUri(redirectUri) 
                 .scope(OidcScopes.OPENID)
                 .scope("read")
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
