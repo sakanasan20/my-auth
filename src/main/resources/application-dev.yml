@@ -3,6 +3,7 @@ server:
 
 oauth2:
   redirect-uri: http://localhost:8080/login/oauth2/code/portal-client
+  issuer-uri: http://localhost:8081
   
 spring:
   security:

@@ -38,6 +38,9 @@ public class AuthorizationServerConfig {
 	
     @Value("${oauth2.redirect-uri}")
     private String redirectUri;
+    
+    @Value("${oauth2.issuer-uri}")
+    private String issuerUri;
 	
 	@Autowired
 	private UserConverter userConverter;
@@ -114,7 +117,7 @@ public class AuthorizationServerConfig {
     @Bean
     AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
-            .issuer("http://localhost:8081") // OpenID Connect metadata (/.well-known/openid-configuration) 所需的發行者 URL（issuer）
+            .issuer(issuerUri) // OpenID Connect metadata (/.well-known/openid-configuration) 所需的發行者 URL（issuer）
             .build();
     }
 }
