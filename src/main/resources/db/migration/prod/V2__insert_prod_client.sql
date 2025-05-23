@@ -13,12 +13,12 @@ INSERT INTO public.oauth2_registered_client (
 	client_settings, 
 	token_settings
 ) VALUES (
-	'2af9037e-627a-45c0-954d-8d87d0562834', 
+	uuid_generate_v4(),
 	'portal-client', 
 	NOW(), 
 	'{bcrypt}$2a$10$PamQcqOkgZr7p7oay/eaOubTqongxTK2t1YiA/FIr2wpO4BlldFlG', 
 	NULL, 
-	'2af9037e-627a-45c0-954d-8d87d0562834', 
+	'Portal Client', 
 	'client_secret_basic', 
 	'refresh_token,client_credentials,authorization_code', 
 	'https://portal.niq-dev.com/login/oauth2/code/portal-client', 
