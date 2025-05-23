@@ -20,7 +20,7 @@ import com.niq.auth.repository.JwkRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Profile("postgres")
+@Profile({ "dev", "prod" })
 @RequiredArgsConstructor
 public class PersistentJwkService {
 
