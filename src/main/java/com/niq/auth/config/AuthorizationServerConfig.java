@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
@@ -16,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
@@ -33,6 +34,9 @@ import com.niq.auth.dto.UserInfoDto;
 import com.niq.auth.entity.User;
 import com.niq.auth.security.CustomUserDetails;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Configuration
 public class AuthorizationServerConfig {
 	
@@ -92,26 +96,33 @@ public class AuthorizationServerConfig {
     }
     
 	@Bean
-	RegisteredClientRepository registeredClientRepository() {
-        RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("portal-client")
-                .clientSecret(passwordEncoder.encode("portal-secret"))
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .redirectUri(redirectUri) 
-                .scope(OidcScopes.OPENID)
-                .scope("read")
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
-                .tokenSettings(TokenSettings.builder() //指定 access token 和 refresh token 的有效時間與是否重複使用 refresh token
-                    .accessTokenTimeToLive(Duration.ofMinutes(30))
-                    .refreshTokenTimeToLive(Duration.ofHours(8))
-                    .reuseRefreshTokens(false)
-                    .build())
-                .build();
-		
-		return new InMemoryRegisteredClientRepository(registeredClient); // 若要接資料庫，也可改成 JdbcRegisteredClientRepository
+	RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
+		JdbcRegisteredClientRepository repository = new JdbcRegisteredClientRepository(jdbcTemplate);
+
+        if (repository.findByClientId("portal-client") == null) {
+        	log.info("findByClientId == null");
+            RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                    .clientId("portal-client")
+                    .clientSecret(passwordEncoder.encode("portal-secret"))
+                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                    .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                    .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                    .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                    .redirectUri(redirectUri) 
+                    .scope(OidcScopes.OPENID)
+                    .scope("read")
+                    .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                    .tokenSettings(TokenSettings.builder() //指定 access token 和 refresh token 的有效時間與是否重複使用 refresh token
+                        .accessTokenTimeToLive(Duration.ofMinutes(30))
+                        .refreshTokenTimeToLive(Duration.ofHours(8))
+                        .reuseRefreshTokens(false)
+                        .build())
+                    .build();
+        	
+            repository.save(registeredClient);
+        }
+        
+        return repository;
 	}
     
     @Bean
