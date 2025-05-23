@@ -100,7 +100,7 @@ public class AuthorizationServerConfig {
 		JdbcRegisteredClientRepository repository = new JdbcRegisteredClientRepository(jdbcTemplate);
 
         if (repository.findByClientId("portal-client") == null) {
-        	log.info("findByClientId == null");
+
             RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
                     .clientId("portal-client")
                     .clientSecret(passwordEncoder.encode("portal-secret"))

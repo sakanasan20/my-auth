@@ -21,7 +21,7 @@ INSERT INTO public.oauth2_registered_client (
 	'2af9037e-627a-45c0-954d-8d87d0562834', 
 	'client_secret_basic', 
 	'refresh_token,client_credentials,authorization_code', 
-	'http://localhost:8080/login/oauth2/code/portal-client', 
+	'https://portal.niq-dev.com/login/oauth2/code/portal-client', 
 	'', 
 	'read,openid', 
 	'{
