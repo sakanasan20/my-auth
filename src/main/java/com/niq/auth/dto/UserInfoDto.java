@@ -1,10 +1,7 @@
 package com.niq.auth.dto;
 
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.niq.auth.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,22 +37,5 @@ public class UserInfoDto {
         map.put("updatedAt", updatedAt);
         map.put("updatedBy", updatedBy);
         return map;
-    }
-    
-    public static UserInfoDto fromUser(User user) {
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        return new UserInfoDto(
-            user.getId(),
-            user.getUsername(),
-            user.getEmail(),
-            user.isEnabled(),
-            user.isAccountNonLocked(),
-            user.isAccountNonExpired(),
-            user.isCredentialsNonExpired(),
-            user.getCreatedAt() != null ? user.getCreatedAt().format(formatter) : null,
-            user.getCreatedBy(),
-            user.getUpdatedAt() != null ? user.getUpdatedAt().format(formatter) : null,
-            user.getUpdatedBy()
-        );
     }
 }

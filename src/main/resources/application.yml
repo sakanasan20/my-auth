@@ -1,6 +1,10 @@
 spring:
   application:
     name: my-auth
+  jackson:
+    time-zone: Asia/Taipei
+    serialization:
+      write-dates-as-timestamps: false
   profiles: 
     active: 
 #     - local

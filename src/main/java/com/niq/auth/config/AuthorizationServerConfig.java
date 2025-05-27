@@ -34,9 +34,6 @@ import com.niq.auth.dto.UserInfoDto;
 import com.niq.auth.entity.User;
 import com.niq.auth.security.CustomUserDetails;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Configuration
 public class AuthorizationServerConfig {
 	
