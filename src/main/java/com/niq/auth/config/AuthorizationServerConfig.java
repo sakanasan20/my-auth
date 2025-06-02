@@ -2,7 +2,6 @@ package com.niq.auth.config;
 
 import java.time.Duration;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -61,8 +60,15 @@ public class AuthorizationServerConfig {
 	        	
 	        	Set<String> roleSet = userDetails.getAuthorities().stream()
 	                .map(GrantedAuthority::getAuthority)
+	                .filter(auth -> auth.startsWith("ROLE_"))
 	                .collect(Collectors.toSet());
 	        	String roles = String.join(" ", roleSet);
+	        	
+	        	Set<String> authoritySet = userDetails.getAuthorities().stream()
+		                .map(GrantedAuthority::getAuthority)
+		                .filter(auth -> !auth.startsWith("ROLE_"))
+		                .collect(Collectors.toSet());
+		        	String authorities = String.join(" ", authoritySet);
 
 	            User user = userDetails.getUser();
 	            UserInfoDto userInfo = userConverter.toUserInfoDto(user);
@@ -91,17 +97,18 @@ public class AuthorizationServerConfig {
 	            String features = String.join(" ", featSet);
 
 	            if (context.getTokenType().getValue().equals("id_token")) {
+	            	context.getClaims().claim("authorities", authorities);
 	                context.getClaims().claim("roles", roles);
-	                context.getClaims().claim("user", userInfo.toClaims()); // toClaims() 將 DTO 轉為 Map，保證能被 JSON 正確序列化進 token
+	                context.getClaims().claim("userinfo", userInfo.toClaims()); // toClaims() 將 DTO 轉為 Map，保證能被 JSON 正確序列化進 token
 	                context.getClaims().claim("systems", systems);
 	                context.getClaims().claim("modules", modules);
 	                context.getClaims().claim("features", features);
 	            }
 
 	            if (context.getTokenType().getValue().equals("access_token")) {
-	            	context.getClaims().claim("authorities", roles);
+	            	context.getClaims().claim("authorities", authorities);
 	                context.getClaims().claim("roles", roles);
-	                context.getClaims().claim("user", userInfo.toClaims()); // toClaims() 將 DTO 轉為 Map，保證能被 JSON 正確序列化進 token
+	                context.getClaims().claim("userinfo", userInfo.toClaims()); // toClaims() 將 DTO 轉為 Map，保證能被 JSON 正確序列化進 token
 	                context.getClaims().claim("scope", scopes);
 	            }
 	        }
