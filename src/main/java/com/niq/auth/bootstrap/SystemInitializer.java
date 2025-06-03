@@ -22,8 +22,8 @@ public class SystemInitializer implements CommandLineRunner {
 	@Transactional
 	@Override
 	public void run(String... args) {
-		saveSystemIfNotExists("system:scm", "SCM", "Supply Chain Management");
-		saveSystemIfNotExists("system:crm", "CRM", "Customer Relationship Management");
+		saveSystemIfNotExists("system:scm", "SCM", "供應鏈管理");
+		saveSystemIfNotExists("system:crm", "CRM", "客戶關係管理");
 	}
 
 	@Transactional(readOnly = true)

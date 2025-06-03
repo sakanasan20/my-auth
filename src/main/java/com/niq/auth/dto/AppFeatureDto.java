@@ -20,5 +20,7 @@ public class AppFeatureDto {
     private String description;
     
     private String parentCode;
+    
+    private Long moduleId;
 	
 }

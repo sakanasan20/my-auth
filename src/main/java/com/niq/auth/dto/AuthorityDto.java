@@ -1,6 +1,6 @@
 package com.niq.auth.dto;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,20 +11,20 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppModuleDto {
+public class AuthorityDto {
+	
+	private Long id;
 
-    private Long id;
-    
-    private String code;
-    
     private String name;
-    
+
     private String description;
     
-    private List<AppFeatureDto> features;
-    
-    private String parentCode;
-    
-    private Long systemId;
+    private LocalDateTime createdAt;
+
+    private String createdBy;
+
+    private LocalDateTime updatedAt;
+
+    private String updatedBy;
 	
 }
