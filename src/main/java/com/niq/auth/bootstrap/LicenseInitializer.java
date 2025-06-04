@@ -48,7 +48,7 @@ public class LicenseInitializer implements CommandLineRunner {
 		AppModule moduleContact = appModuleRepository.findByName("Contact").orElseThrow(RuntimeException::new);
 		AppModule moduleSales = appModuleRepository.findByName("Sales").orElseThrow(RuntimeException::new);
 
-		licenseRepository.deleteAll();
+		licenseRepository.deleteAllInBatch();
 		
 		saveLicense(UUID.randomUUID().toString(), Instant.now(), Instant.now().plus(30, ChronoUnit.DAYS), userScmAdmin,
 				Set.of(systemScm), Set.of(moduleSupplier, moduleInventory));
